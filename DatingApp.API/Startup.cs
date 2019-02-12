@@ -58,6 +58,12 @@ namespace DatingApp.API
                         ValidateAudience = false
                     };
                 });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Testing_Project", Version = "v1" });
+                //options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "WebApplication1.xml"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,7 +84,7 @@ namespace DatingApp.API
                         var error = context.Features.Get<IExceptionHandlerFeature>();
                         if (error != null)
                         {
-                            context.Response.AddApplicationError(error.Error.Message);
+                            //context.Response.AddApplicationError(error.Error.Message);
                             await context.Response.WriteAsync(error.Error.Message);
                         }
                     });
@@ -89,6 +95,14 @@ namespace DatingApp.API
 
             //app.UseHttpsRedirection();
             //seeder.SeedUsers();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();

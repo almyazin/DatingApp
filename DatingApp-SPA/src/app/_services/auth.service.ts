@@ -15,7 +15,7 @@ export class AuthService {
   decodedToken: any;
   currentUser: User;
   photoUrl = new BehaviorSubject<string>('../../assets/user.png');
-  currentPhotoUrl = this.photoUrl.asObservable();
+  // currentPhotoUrl = this.photoUrl.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -39,8 +39,8 @@ export class AuthService {
       );
   }
 
-  register(model: any) {
-    return this.http.post(this.baseUrl + 'register', model);
+  register(user: User) {
+    return this.http.post(this.baseUrl + 'register', user);
   }
 
   loggedIn() {
