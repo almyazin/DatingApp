@@ -19,24 +19,27 @@ namespace DatingApp.API.Data
 
         public void SeedUsers()
         {
-            var userData = File.ReadAllText("Data/UserSeedData.json");
-
-            var users = JsonConvert.DeserializeObject<List<User>>(userData);
-
-            foreach (var user in users)
+            if (!context.Users.Any())
             {
-                byte[] passwordHash, passwordSalt;
+                var userData = File.ReadAllText("Data/UserSeedData.json");
 
-                CreatePasswordHash("password", out passwordHash, out passwordSalt);
+                var users = JsonConvert.DeserializeObject<List<User>>(userData);
 
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-                user.Username = user.Username.ToLower();
+                foreach (var user in users)
+                {
+                    byte[] passwordHash, passwordSalt;
 
-                context.Users.Add(user);
+                    CreatePasswordHash("password", out passwordHash, out passwordSalt);
+
+                    user.PasswordHash = passwordHash;
+                    user.PasswordSalt = passwordSalt;
+                    user.Username = user.Username.ToLower();
+
+                    context.Users.Add(user);
+                }
+
+                context.SaveChanges(); 
             }
-
-            context.SaveChanges();
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
